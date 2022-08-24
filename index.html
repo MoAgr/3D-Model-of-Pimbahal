@@ -1,18 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css">
-    <title>Pimbahal</title>
-</head>
-<body class="day">
-    
-    <div class="scene"></div>
-    <script src="./three.min.js"></script>
-    <script src="./GLTFLoader.js"></script>
-    <script src="./OrbitControls.js"></script>
-    <script src="./app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Render of Pimbahal</title>
+    <link rel="stylesheet" href="/landing.css" />
+    <script
+      src="https://kit.fontawesome.com/1bcd2404f3.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <section class="grid">
+      <div class="text v-center">
+        <div class="center-wrapper">
+          <div class="heading">
+            <h2>3D Render of</h2>
+            <h1>Pimbahal Pukhu</h1>
+          </div>
+          <div class="body-text">
+            A 3D model of Pimbahal rendered on your browser with 3.js
+          </div>
+          <div class="button">
+            <a role="button" href="view3d.html">View Render</a>
+          </div>
+        </div>
+      </div>
+      <div class="image v-center">
+        <img src="/assets/pimpmahal.png" alt="" id="pimbahal-img" />
+      </div>
+    </section>
+
+    <section class="features container">
+      <h2>Features</h2>
+      <div class="features-list flex">
+        <!-- Feature 1 Start-->
+        <div class="feature card">
+          <img src="assets/icon-web-app.png" alt="" class="icon" />
+          <h3>Day/Night Cycle</h3>
+          <div class="text">
+            The application features both day and night view of the scene.
+          </div>
+        </div>
+        <!-- Feature 1 End-->
+
+        <!-- Feature 2 Start-->
+        <div class="feature card">
+          <img src="assets/icon-web-app.png" alt="" class="icon" />
+          <h3>Camera Controls</h3>
+          <div class="text">
+            The user can use keyboard controls to move the camera and mouse
+            controls to zoom in.
+          </div>
+        </div>
+        <!-- Feature 2 End-->
+
+        <!-- Feature 3 Start-->
+        <div class="feature card">
+          <img src="assets/icon-web-app.png" alt="" class="icon" />
+          <h3>Water Simulation</h3>
+          <div class="text">Water wave and reflection simulation.</div>
+        </div>
+        <!-- Feature 3 End-->
+      </div>
+    </section>
+
+    <section class="team container">
+      <h2>Team Members</h2>
+      <div class="features-list flex">
+        <!-- Member 1 Start-->
+        <div class="member card">
+          <img src="/assets/human.png" alt="" class="avatar" />
+          <h3>Aabhusan Aryal</h3>
+          <div class="social-icons">
+            <a href="https://www.linkedin.com/in/aabhusanaryal/" target="_blank"
+              ><i class="fa-brands fa-linkedin-in icon"></i
+            ></a>
+            <a href="https://twitter.com/aabhusanaryal" target="_blank">
+              <i class="fa-brands fa-square-twitter icon"></i>
+            </a>
+            <a href="https://github.com/aabhusanaryal" target="_blank">
+              <i class="fa-brands fa-square-github icon"></i>
+            </a>
+          </div>
+        </div>
+        <!-- Member 1 End-->
+
+        <!-- Member 2 Start-->
+        <div class="member card">
+          <img src="/assets/human.png" alt="" class="avatar" />
+          <h3>Liza Shrestha</h3>
+          <div class="social-icons">
+            <a
+              href="https://www.linkedin.com/in/liza-s-994496109/"
+              target="_blank"
+              ><i class="fa-brands fa-linkedin-in icon"></i
+            ></a>
+            <a href="https://twitter.com/liza_shresthaa" target="_blank">
+              <i class="fa-brands fa-square-twitter icon"></i>
+            </a>
+            <a href="https://github.com/liza1212" target="_blank">
+              <i class="fa-brands fa-square-github icon"></i>
+            </a>
+          </div>
+        </div>
+        <!-- Member 2 End-->
+
+        <!-- Member 3 Start-->
+        <div class="member card">
+          <img src="/assets/human.png" alt="" class="avatar" />
+          <h3>Mohit Agarwal</h3>
+          <div class="social-icons">
+            <!-- <a href="https://www.linkedin.com/in/moagr/" target="_blank"
+              ><i class="fa-brands fa-linkedin-in icon"></i
+            ></a> -->
+            <!-- <a href="https://twitter.com/moagr" target="_blank">
+              <i class="fa-brands fa-square-twitter icon"></i>
+            </a> -->
+            <a href="https://github.com/moagr" target="_blank">
+              <i class="fa-brands fa-square-github icon"></i>
+            </a>
+          </div>
+        </div>
+        <!-- Member 3 End-->
+
+        <!-- Member 4 Start-->
+        <div class="member card">
+          <img src="/assets/human.png" alt="" class="avatar" />
+          <h3>Prabigya Acharya</h3>
+          <div class="social-icons">
+            <a href="https://www.linkedin.com/in/aprab/" target="_blank"
+              ><i class="fa-brands fa-linkedin-in icon"></i
+            ></a>
+            <!-- <a href="https://twitter.com/aabhusanaryal" target="_blank">
+              <i class="fa-brands fa-square-twitter icon"></i>
+            </a> -->
+            <a href="https://github.com/aabhusanaryal" target="_blank">
+              <i class="fa-brands fa-square-github icon"></i>
+            </a>
+          </div>
+        </div>
+        <!-- Member 4 End-->
+      </div>
+    </section>
+  </body>
 </html>
