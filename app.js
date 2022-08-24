@@ -73,6 +73,8 @@ function init(){
     container.appendChild(renderer.domElement);
     renderer.toneMapping=THREE.NoToneMapping;
     renderer.outputEncoding=THREE.sRGBEncoding;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     controls=new THREE.OrbitControls(camera,renderer.domElement);
     controls.addEventListener('change',renderer);
@@ -104,10 +106,6 @@ function init(){
    //lights
     const ambient=new THREE.AmbientLight(0xffffff,0.25);
     scene.add(ambient);
-
-    //for sun
-    sunLight=new THREE.DirectionalLight(0x0000ff,5);//0xFCF9D9
-    sunLight.position.set(-100,10,0);
 
     //sun model
     geometry1 = new THREE.SphereGeometry( 15, 32, 16 );
@@ -217,7 +215,7 @@ function init(){
         for(const child of gltf.scene.children){
             if(child.name=="Plane001"){
                 // child.material= new THREE.MeshBasicMaterial();
-                child.material.color=new THREE.Color(0x7BFFED);
+                child.material.color=new THREE.Color(0x2fbab1);
                 child.material.transparent=true;
                 child.material.opacity=0.9;
                 // child.material.combine=1;
@@ -281,10 +279,13 @@ function animate(){
         let color=new THREE.Color(r/255,g/255,bl/255);
         sunLight=new THREE.DirectionalLight(color,2);
         sunLight.position.set(sunX,sunY,0);
+        sunLight.castShadow = true;
         scene.add(sunLight);
         scene.remove(sphere1);
         material1 = new THREE.MeshBasicMaterial( { color: color } );
         sphere1 = new THREE.Mesh( geometry1, material1 );
+        sphere1.castShadow = true;
+        sphere1.receiveShadow = false;
         scene.add( sphere1 );
         sphere1.position.set(sunX,sunY,0)
 
