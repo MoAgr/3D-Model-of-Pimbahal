@@ -320,7 +320,7 @@ function animate(){
             scene.add(roofLightsG[i]);
         }
         scene.remove(sunLight);
-        sunLight=new THREE.DirectionalLight(0xc2c5cc,0.8);
+        sunLight=new THREE.DirectionalLight(0xc2c5cc,0.5);
         sunLight.position.set(sunX,sunY,0);
         scene.add(sunLight);
         scene.remove(sphere1);
