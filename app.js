@@ -71,6 +71,8 @@ function init(){
     renderer.setSize(container.clientWidth,container.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
+    renderer.toneMapping=THREE.NoToneMapping;
+    renderer.outputEncoding=THREE.sRGBEncoding;
 
     controls=new THREE.OrbitControls(camera,renderer.domElement);
     controls.addEventListener('change',renderer);
@@ -210,7 +212,7 @@ function init(){
     loader.load('./3d/all final.gltf',(gltf)=>{
         scene.add(gltf.scene);
         console.log(gltf.scene);
-
+        console.log("loaded");
         //plane001=water
         for(const child of gltf.scene.children){
             if(child.name=="Plane001"){
@@ -259,8 +261,8 @@ function animate(){
                 sunY=0;
             }
         }
-        console.log(sunX,sunY);
-        console.log(r,g,bl);
+        // console.log(sunX,sunY);
+        // console.log(r,g,bl);
         document.body.classList.add('day');
         document.body.classList.remove('night');
         for(let i=0;i<6;i++){
