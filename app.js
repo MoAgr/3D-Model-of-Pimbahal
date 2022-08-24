@@ -18,7 +18,7 @@ let geometry1;
 let mixer;
 let moonTexture;
 let sunX=-300,sunY=0;
-let a=1,b=1;
+let a=0.5,b=0.5;
 let rise=true;
 let orbitRadius=300;
 let pause=false;
@@ -106,7 +106,7 @@ function init(){
         lampLightsR[i].position.set( pointLightXr, pointLightY, tempZ );
         scene.add( lampLightsR[i] );
         lampLightHelperR[i] = new THREE.PointLightHelper( lampLightsR[i], sphereSize );
-        scene.add( lampLightHelperR[i] );
+        // scene.add( lampLightHelperR[i] );
         tempZ+=13.6;
 
     }
@@ -119,9 +119,41 @@ function init(){
         lampLightsL[i].position.set( pointLightXl, pointLightY, tempZ );
         scene.add( lampLightsL[i] );
         lampLightHelperL[i] = new THREE.PointLightHelper( lampLightsL[i], sphereSize );
-        scene.add( lampLightHelperL[i] );
+        // scene.add( lampLightHelperL[i] );
         tempZ+=13.6;
 
+    }
+
+    //roof
+    let roofLightColor=0xffff00;
+    let roofLightIntensity=0.125;
+    let roofLightDistance=50;
+    let roofLightDecay=0.125;
+    let roofLightX=-45;
+    let roofLightY=25;
+    let roofLightZ=-2.25;
+    let tempX=roofLightX;
+    let tempY=roofLightY;
+    tempZ=roofLightZ;
+    
+    for(let i=0;i<13;i++){
+        roofLights[i]=new THREE.PointLight( roofLightColor, roofLightIntensity, roofLightDistance,roofLightDecay );
+        roofLights[i].position.set( tempX, tempY, tempZ );
+        scene.add( roofLights[i] );
+        roofLightHelper[i] = new THREE.PointLightHelper( roofLights[i], sphereSize );
+        // scene.add( roofLightHelper[i] );
+        if(i<3){
+            tempX-=9.5;
+        }
+        else if(i<6){
+            tempZ-=9.5;
+        }
+        else if(i<9){
+            tempX+=9.5;
+        }
+        else{
+            tempZ+=9.5
+        }
     }
     
     //Load Model
@@ -148,7 +180,7 @@ function init(){
         mixer=new THREE.AnimationMixer(gltf.scene);
         const clips=gltf.animations;
         console.log(clips);
-        const clip=THREE.AnimationClip.findByName(clips,'KeyAction');
+        const clip=THREE.AnimationClip.findByName(clips,'Key.002Action');
         const action=mixer.clipAction(clip);
         action.play();
         animate();
@@ -189,6 +221,9 @@ function animate(){
         for(let i=0;i<6;i++){
             scene.remove(lampLightsL[i]);
         }
+        for(let i=0;i<12;i++){
+            scene.remove(roofLights[i]);
+        }
         scene.remove(sunLight);
         let color=new THREE.Color(r/255,g/255,bl/255);
         sunLight=new THREE.DirectionalLight(color,2);
@@ -228,6 +263,9 @@ function animate(){
         }
         for(let i=0;i<6;i++){
             scene.add(lampLightsL[i]);
+        }
+        for(let i=0;i<12;i++){
+            scene.add(roofLights[i]);
         }
         scene.remove(sunLight);
         sunLight=new THREE.DirectionalLight(0xc2c5cc,0.8);
