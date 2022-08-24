@@ -9,9 +9,11 @@ let sunLight;
 let lampLightsR = [];
 let lampLightsL = [];
 let roofLights = [];
+let roofLightsG = [];
 let lampLightHelperL = [];
 let lampLightHelperR = [];
 let roofLightHelper = [];
+let roofLightHelperG = [];
 let sphere1;
 let material1;
 let geometry1;
@@ -19,8 +21,8 @@ let mixer;
 let moonTexture;
 let sunX = -300,
   sunY = 0;
-let a = 0.5,
-  b = 0.5;
+let a = 1,
+  b = 1;
 let rise = true;
 let orbitRadius = 300;
 let pause = false;
@@ -30,19 +32,27 @@ let bl = 50;
 
 const clock = new THREE.Clock();
 
+function incr(sunX, sunY, rise) {
+  if (sunY == 0) {
+    sunX += a;
+    sunY = Math.sqrt(Math.pow(orbitRadius, 2) - Math.pow(sunX, 2));
+  } else if (Math.abs(sunX / sunY) <= 1) {
+    sunX += a;
+    sunY = Math.sqrt(Math.pow(orbitRadius, 2) - Math.pow(sunX, 2));
+  } else {
+    if (rise) {
+      sunY += b;
+      sunX = -Math.sqrt(Math.pow(orbitRadius, 2) - Math.pow(sunY, 2));
+    } else {
+      sunY -= b;
+      sunX = Math.sqrt(Math.pow(orbitRadius, 2) - Math.pow(sunY, 2));
+    }
+  }
+  return { sunX, sunY };
+}
+
 function init() {
   container = document.querySelector(".scene");
-
-  window.addEventListener("keypress", (event) => {
-    console.log(event.key);
-    if (event.key == "n") {
-      time = "night";
-    } else if (event.key == "d") {
-      time = "day";
-    } else if (event.key == " ") {
-      pause = !pause;
-    }
-  });
 
   //Create scene
   scene = new THREE.Scene();
@@ -59,10 +69,25 @@ function init() {
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   container.appendChild(renderer.domElement);
+  renderer.toneMapping = THREE.NoToneMapping;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.addEventListener("change", renderer);
   controls.listenToKeyEvents(window);
+
+  window.addEventListener("keypress", (event) => {
+    console.log(event.key);
+    if (event.key == "n") {
+      time = "night";
+    } else if (event.key == "d") {
+      time = "day";
+    } else if (event.key == " ") {
+      pause = !pause;
+    }
+  });
 
   // controls.maxAzimuthAngle =(1.309);
   // controls.minAzimuthAngle =(-1.309);
@@ -77,13 +102,6 @@ function init() {
   //lights
   const ambient = new THREE.AmbientLight(0xffffff, 0.25);
   scene.add(ambient);
-
-  //for sun
-  sunLight = new THREE.DirectionalLight(0x0000ff, 5); //0xFCF9D9
-  sunLight.position.set(-100, 10, 0);
-  // const helper = new THREE.DirectionalLightHelper( sunLight, 10 ,0xffffff);
-  // scene.add( helper );
-  // scene.add(sunLight);
 
   //sun model
   geometry1 = new THREE.SphereGeometry(15, 32, 16);
@@ -138,7 +156,7 @@ function init() {
     tempZ += 13.6;
   }
 
-  //roof
+  //main roof
   let roofLightColor = 0xffff00;
   let roofLightIntensity = 0.125;
   let roofLightDistance = 50;
@@ -172,23 +190,53 @@ function init() {
     }
   }
 
+  //gate roof
+  roofLightX = -40;
+  roofLightY = 26;
+  roofLightZ = 91;
+  tempX = roofLightX;
+  tempY = roofLightY;
+  tempZ = roofLightZ;
+  for (let i = 0; i < 12; i++) {
+    roofLightsG[i] = new THREE.PointLight(
+      roofLightColor,
+      roofLightIntensity,
+      roofLightDistance,
+      roofLightDecay
+    );
+    roofLightsG[i].position.set(tempX, tempY, tempZ);
+    scene.add(roofLightsG[i]);
+    roofLightHelperG[i] = new THREE.PointLightHelper(
+      roofLightsG[i],
+      sphereSize
+    );
+    // scene.add( roofLightHelperG[i] );
+    if (i < 3) {
+      tempX -= 12.75;
+    } else if (i < 6) {
+      tempZ += 8.7;
+    } else if (i < 9) {
+      tempX += 12.75;
+    } else {
+      tempZ -= 8.7;
+    }
+  }
+
   //Load Model
   let loader = new THREE.GLTFLoader();
   loader.load("./3d/all final.gltf", (gltf) => {
     scene.add(gltf.scene);
     console.log(gltf.scene);
+    console.log("loaded");
+    //plane001=water
     for (const child of gltf.scene.children) {
       if (child.name == "Plane001") {
         // child.material= new THREE.MeshBasicMaterial();
-        child.material.color = new THREE.Color(0x7bffed);
+        child.material.color = new THREE.Color(0x2fbab1);
         child.material.transparent = true;
         child.material.opacity = 0.9;
         // child.material.combine=1;
-      }
-      // else if(child.name=="roof_shape001_Cone001" || child.name=="roof_shape_Cone003" || child.name=="roof_shape003_Cone005" || child.name=="roof_shape002_Cone002" || child.name=="roof_shape002_Cone001" || child.name=="roof_shape003_Cone001" || child.name=="roof_shape_Cone002"){
-      //     child.material.color=new THREE.Color(0x323232);
-      // }
-      else if (child.name == "Cube001") {
+      } else if (child.name == "Cube001") {
         child.material.roughness = 1;
       }
     }
@@ -198,7 +246,6 @@ function init() {
     const clip = THREE.AnimationClip.findByName(clips, "Key.002Action");
     const action = mixer.clipAction(clip);
     action.play();
-    // Hiding the loading spinner
     let spinner = document.querySelector(".loader");
     spinner.classList.add("hidden");
     animate();
@@ -206,30 +253,32 @@ function init() {
 }
 
 function animate() {
+  let tup;
   if (time == "day") {
     if (!pause) {
+      tup = incr(sunX, sunY, rise);
+      sunX = tup.sunX;
+      sunY = tup.sunY;
       if (rise) {
-        sunX += a;
-        sunY = Math.sqrt(Math.pow(orbitRadius, 2) - Math.pow(sunX, 2));
         g = (sunY * 85) / orbitRadius + 170;
         bl = (sunY * 155) / orbitRadius + 50;
       }
-      if (sunY > 300) {
+      if (!rise) {
+        g = (sunY * 85) / orbitRadius + 170;
+        bl = (sunY * 155) / orbitRadius + 50;
+      }
+      if (sunY > 299) {
         rise = false;
       }
-      if (!rise) {
-        sunX += a;
-        sunY = Math.sqrt(Math.pow(orbitRadius, 2) - Math.pow(sunX, 2));
-        g -= (sunY * 85) / orbitRadius;
-        bl -= (sunY * 155) / orbitRadius;
-      }
-      if (sunY == 0) {
+      if (sunY < 0) {
         time = "night";
         rise = true;
         sunX = -300;
         sunY = 0;
       }
     }
+    // console.log(sunX,sunY);
+    // console.log(r,g,bl);
     document.body.classList.add("day");
     document.body.classList.remove("night");
     for (let i = 0; i < 6; i++) {
@@ -241,30 +290,31 @@ function animate() {
     for (let i = 0; i < 12; i++) {
       scene.remove(roofLights[i]);
     }
+    for (let i = 0; i < 12; i++) {
+      scene.remove(roofLightsG[i]);
+    }
     scene.remove(sunLight);
     let color = new THREE.Color(r / 255, g / 255, bl / 255);
     sunLight = new THREE.DirectionalLight(color, 2);
     sunLight.position.set(sunX, sunY, 0);
+    sunLight.castShadow = true;
     scene.add(sunLight);
     scene.remove(sphere1);
     material1 = new THREE.MeshBasicMaterial({ color: color });
     sphere1 = new THREE.Mesh(geometry1, material1);
+    sphere1.castShadow = true;
+    sphere1.receiveShadow = false;
     scene.add(sphere1);
     sphere1.position.set(sunX, sunY, 0);
   } else if (time == "night") {
     if (!pause) {
-      if (rise) {
-        sunX += a;
-        sunY = Math.sqrt(Math.pow(orbitRadius, 2) - Math.pow(sunX, 2));
-      }
-      if (sunY > 300) {
+      tup = incr(sunX, sunY, rise);
+      sunX = tup.sunX;
+      sunY = tup.sunY;
+      if (sunY > 299) {
         rise = false;
       }
-      if (!rise) {
-        sunX += a;
-        sunY = Math.sqrt(Math.pow(orbitRadius, 2) - Math.pow(sunX, 2));
-      }
-      if (sunY == 0) {
+      if (sunY < 0) {
         time = "day";
         rise = true;
         sunX = -300;
@@ -282,13 +332,15 @@ function animate() {
     for (let i = 0; i < 12; i++) {
       scene.add(roofLights[i]);
     }
+    for (let i = 0; i < 12; i++) {
+      scene.add(roofLightsG[i]);
+    }
     scene.remove(sunLight);
-    sunLight = new THREE.DirectionalLight(0xc2c5cc, 0.8);
+    sunLight = new THREE.DirectionalLight(0xc2c5cc, 0.5);
     sunLight.position.set(sunX, sunY, 0);
     scene.add(sunLight);
     scene.remove(sphere1);
     material1 = new THREE.MeshBasicMaterial({ map: moonTexture });
-    // material1 = new THREE.MeshBasicMaterial( { color: 0xffffff } );
     sphere1 = new THREE.Mesh(geometry1, material1);
     scene.add(sphere1);
     sphere1.position.set(sunX, sunY, 0);
@@ -303,7 +355,6 @@ init();
 function onWindowResize() {
   camera.aspect = container.clientWidth / container.clientHeight;
   camera.updateProjectionMatrix();
-
   renderer.setSize(container.clientWidth, container.clientHeight);
 }
 
