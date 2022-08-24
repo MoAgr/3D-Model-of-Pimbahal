@@ -20,7 +20,7 @@ let geometry1;
 let mixer;
 let moonTexture;
 let sunX=-300,sunY=0;
-let a=1,b=1;
+let a=0.25,b=0.25;
 let rise=true;
 let orbitRadius=300;
 let pause=false;
