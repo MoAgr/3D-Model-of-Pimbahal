@@ -29,8 +29,8 @@ let g=170;
 let bl=50;
 
 const clock= new THREE.Clock();
-function incr(sunX,sunY,rise){//212.2308882635893 212.03313436075948
 
+function incr(sunX,sunY,rise){
     if(sunY==0){
         sunX+=a;
         sunY=Math.sqrt(Math.pow(orbitRadius,2)-Math.pow(sunX,2));
@@ -55,20 +55,7 @@ function incr(sunX,sunY,rise){//212.2308882635893 212.03313436075948
 
 function init(){
     container=document.querySelector('.scene');
-
-    window.addEventListener('keypress',(event)=>{
-        console.log(event.key);
-        if(event.key=='n'){
-            time='night';
-        }
-        else if(event.key=='d'){
-            time='day';
-        }
-        else if(event.key==' '){
-            pause=!pause;
-        }
-    })
-
+    
     //Create scene
     scene= new THREE.Scene();
 
@@ -89,6 +76,19 @@ function init(){
     controls.addEventListener('change',renderer);
     controls.listenToKeyEvents(window);
 
+    window.addEventListener('keypress',(event)=>{
+        console.log(event.key);
+        if(event.key=='n'){
+            time='night';
+        }
+        else if(event.key=='d'){
+            time='day';
+        }
+        else if(event.key==' '){
+            pause=!pause;
+        }
+    })
+
     // controls.maxAzimuthAngle =(1.309);
     // controls.minAzimuthAngle =(-1.309);
 
@@ -106,9 +106,6 @@ function init(){
     //for sun
     sunLight=new THREE.DirectionalLight(0x0000ff,5);//0xFCF9D9
     sunLight.position.set(-100,10,0);
-    // const helper = new THREE.DirectionalLightHelper( sunLight, 10 ,0xffffff);
-    // scene.add( helper );
-    // scene.add(sunLight);
 
     //sun model
     geometry1 = new THREE.SphereGeometry( 15, 32, 16 );
@@ -222,10 +219,7 @@ function init(){
                 child.material.transparent=true;
                 child.material.opacity=0.9;
                 // child.material.combine=1;
-            }
-            // else if(child.name=="roof_shape001_Cone001" || child.name=="roof_shape_Cone003" || child.name=="roof_shape003_Cone005" || child.name=="roof_shape002_Cone002" || child.name=="roof_shape002_Cone001" || child.name=="roof_shape003_Cone001" || child.name=="roof_shape_Cone002"){
-            //     child.material.color=new THREE.Color(0x323232);
-            // }     
+            }    
             else if(child.name=="Cube001"){
                 child.material.roughness=1;
             }
@@ -245,17 +239,13 @@ function animate(){
     if(time=='day'){
         if(!pause){
             tup=incr(sunX,sunY,rise)
-            sunX=tup.sunX // -207.0191117364107
-            sunY=tup.sunY // 217.12458952377435
+            sunX=tup.sunX 
+            sunY=tup.sunY 
             if(rise){
-            //     sunX+=a;
-            //     sunY=Math.sqrt(Math.pow(orbitRadius,2)-Math.pow(sunX,2));
                 g=((sunY*85)/orbitRadius) + 170;
                 bl=((sunY*155)/orbitRadius) + 50;
             }
             if(!rise){
-            //     sunX+=a;
-            //     sunY=Math.sqrt(Math.pow(orbitRadius,2)-Math.pow(sunX,2));
                 g=((sunY*85)/orbitRadius) +170;
                 bl=((sunY*155)/orbitRadius) +50;
             }
@@ -332,7 +322,6 @@ function animate(){
         scene.add(sunLight);
         scene.remove(sphere1);
         material1 = new THREE.MeshBasicMaterial( { map: moonTexture } );
-        // material1 = new THREE.MeshBasicMaterial( { color: 0xffffff } );
         sphere1 = new THREE.Mesh( geometry1, material1 );
         scene.add( sphere1 );
         sphere1.position.set(sunX,sunY,0)
